@@ -1,5 +1,5 @@
 .PHONY: all
-all: ioctl_eject.out myioctl_app.out myioctl_driver
+all: ioctl_eject.out myioctl_app.out myioctl_driver.ko
 
 # Lab 1 #################################################################
 ioctl_eject.out: ioctl_eject.c
@@ -10,7 +10,7 @@ myioctl_app.out: myioctl_app.c myioctl_driver.h
 	gcc -o myioctl_app.out myioctl_app.c
 
 obj-m += myioctl_driver.o
-myioctl_driver: myioctl_driver.c myioctl_driver.h
+myioctl_driver.ko: myioctl_driver.c myioctl_driver.h
 	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) modules
 
 # clean ###############################################################
@@ -18,3 +18,18 @@ myioctl_driver: myioctl_driver.c myioctl_driver.h
 clean:
 	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) clean
 	rm *.out
+
+# load_myioctl ########################################################
+.PHONY: load
+load: myioctl_driver.ko unload
+	sudo insmod myioctl_driver.ko;
+	export MAJOR=`sudo dmesg | tail | awk '/myioctl module loaded./{print $$8}' | tail -n 1`; \
+	echo Major Number is $${MAJOR}; \
+	sudo mknod /dev/myioctl c  $${MAJOR} 0;
+	@sudo chmod 666 /dev/myioctl;
+
+.PHONY: unload
+unload:
+	-sudo rmmod myioctl_driver.ko
+	-sudo rm /dev/myioctl
+	@echo Unload myioctl ............................................................................ Done
