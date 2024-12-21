@@ -1,5 +1,5 @@
 .PHONY: all
-all: ioctl_eject myioctl_app myioctl_driver.ko
+all: ioctl_eject myioctl_app myioctl_app_reset myioctl_driver.ko
 
 # Lab 1 #################################################################
 ioctl_eject: ioctl_eject.c
@@ -9,6 +9,9 @@ ioctl_eject: ioctl_eject.c
 myioctl_app: myioctl_app.c myioctl_driver.h
 	gcc -o myioctl_app myioctl_app.c
 
+myioctl_app_reset: myioctl_app_reset.c myioctl_driver.h
+	gcc -o myioctl_app_reset myioctl_app_reset.c
+
 obj-m += myioctl_driver.o
 myioctl_driver.ko: myioctl_driver.c myioctl_driver.h
 	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) modules
@@ -17,7 +20,7 @@ myioctl_driver.ko: myioctl_driver.c myioctl_driver.h
 .PHONY: clean
 clean: unload
 	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) clean
-	rm ioctl_eject myioctl_app
+	rm ioctl_eject myioctl_app myioctl_app_reset
 
 # load_myioctl ########################################################
 .PHONY: load
