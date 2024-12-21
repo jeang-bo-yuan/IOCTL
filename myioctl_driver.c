@@ -18,7 +18,6 @@ static int myioctl_open(struct inode *inode, struct file *filp);
 static int myioctl_release(struct inode *inode, struct file *filp);
 static long myioctl_ioctl(struct file *filp, unsigned int cmd, unsigned long arg);
 
-// 從檔案讀取計數器值
 static int read_persistent_counter(void) {
     struct file *file;
     char buf[16];
@@ -27,7 +26,7 @@ static int read_persistent_counter(void) {
     file = filp_open(PERSIST_FILE, O_RDONLY, 0);
     if (IS_ERR(file)) {
         pr_info("Failed to open persist file. Initializing counter to 0.\n");
-        return 0; // 若檔案不存在，返回 0
+        return 0; 
     }
 
     memset(buf, 0, sizeof(buf));
@@ -37,7 +36,7 @@ static int read_persistent_counter(void) {
             value = 0;
         }
     }
-    
+
     filp_close(file, NULL);
     return value;
 }
@@ -47,7 +46,7 @@ static void write_persistent_counter(int value) {
     char buf[16];
     int len;
 
-    snprintf(buf, sizeof(buf), "%d", value); // 將整數轉為字串
+    snprintf(buf, sizeof(buf), "%d", value);
 
     file = filp_open(PERSIST_FILE, O_WRONLY | O_CREAT | O_TRUNC, 0644);
     if (IS_ERR(file)) {
