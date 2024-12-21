@@ -30,6 +30,8 @@
 *.exe
 *.out
 *.app
+ioctl_eject
+myioctl_app
 
 *.cmd
 [Mm]odule*
