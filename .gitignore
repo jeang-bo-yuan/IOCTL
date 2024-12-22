@@ -32,6 +32,7 @@
 *.app
 ioctl_eject
 myioctl_app
+myioctl_app_reset
 
 *.cmd
 [Mm]odule*

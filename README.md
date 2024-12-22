@@ -8,7 +8,7 @@ Source code: ioctl_eject.c
 Compile and Run
 ```sh
 make
-./ioctl_eject.out
+./ioctl_eject
 ```
 
 # Lab2: Linux Kernel Driver
@@ -24,4 +24,9 @@ make load
 
 # Unload myioctl kernel module
 make unload
+
+# Add to counter
+./myioctl_app
+# Reset the counter
+./myioctl_app_reset
 ```
